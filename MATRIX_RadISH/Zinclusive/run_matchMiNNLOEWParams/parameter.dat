@@ -1,0 +1,157 @@
+##########################
+# MATRIX input parameter #
+##########################
+
+#----------------------\
+# general run settings |
+#----------------------/
+process_class   =  pp-emve~+X  #  process id
+E               =  6500.       #  energy per beam
+coll_choice     =  1           #  (1) PP collider; (2) PPbar collider
+
+
+#----------------\
+# scale settings |
+#----------------/
+scale_ren       =  80.385      #  renormalization (muR) scale
+scale_fact      =  80.385      #  factorization (muF) scale
+dynamic_scale   =  1           #  dynamic ren./fac. scale
+                               #  0: fixed scale above
+                               #  1: invariant mass (Q) of system (of the colourless final states)
+                               #  2: transverse mass (mT^2=Q^2+pT^2) of system (of the colourless final states)
+factor_central_scale = 1       #  relative factor for central scale (important for dynamic scales)
+scale_variation  = 1           #  switch for muR/muF uncertainties (0) off; (1) 7-point (default); (2) 9-point variation
+variation_factor = 2           #  symmetric variation factor; usually a factor of 2 up and down (default)
+
+# scale settings for resummation
+scale_res         =  80.385    #  resummation scale
+dynamic_scale_res =  1         #  dynamic resummation scale
+                               #  0: fixed scale above
+                               #  1: invariant mass (Q) of system (of the colourless final states)
+factor_scale_res = 0.5         #  relative factor for central resummation scale (important for dynamic scale)
+scale_variation_res  = 1       #  switch for resummation-scale uncertainties (0) off; (1) on (default);
+variation_factor_res = 2       #  symmetric variation factor; usually a factor of 2 up and down (default)
+
+
+#------------------------------\
+# order-dependent run settings |
+#------------------------------/
+# LO
+run_LO          =  1           #  switch for LO cross section (1) on; (0) off
+LHAPDF_LO       =  NNPDF31_lo_as_0118 #  LO LHAPDF set
+PDFsubset_LO    =  0           #  member of LO PDF set
+precision_LO    =  1.e-2       #  precision of LO cross section
+
+# NLO(+NLL)
+run_NLO         =  1           #  switch for NLO cross section (1) on; (0) off
+add_RadISH_NLL  =  0           #  switch to add NLL RadISH resummation to NLO (1) on; (0) off
+LHAPDF_NLO      =  NNPDF31_nlo_as_0118 #  NLO LHAPDF set
+PDFsubset_NLO   =  0           #  member of NLO PDF set
+precision_NLO   =  1.e-2       #  precision of NLO cross section
+NLO_subtraction_method = 1     #  switch to use (2) qT subtraction (1) Catani-Seymour at NLO
+
+# NNLO(+NNLL/N3LL)
+run_NNLO        =  1           #  switch for NNLO cross section (1) on; (0) off
+add_RadISH_NNLL =  0           #  switch to add NNLL RadISH resummation to NNLO (1) on; (0) off
+add_RadISH_N3LL =  1           #  switch to add N3LL RadISH resummation to NNLO (1) on; (0) off
+LHAPDF_NNLO     =  NNPDF31_nnlo_as_0118 #  NNLO LHAPDF set
+PDFsubset_NNLO  =  0           #  member of NNLO PDF set
+precision_NNLO  =  1.e-3       #  precision of NNLO cross section
+
+
+#--------------------------\
+# RadISH-specific settings |
+#--------------------------/
+RadISH_observable = 1          #  observable to be resummed by RadISH at the accuracy specified above
+                               #  1: transverse-momentum of system (of the colourless final states)
+                               #  2: transverse-momentum of the leading jet (no N3LL supported!);
+                               #      jets MUST be defined like this:
+                               #     "define_eta jet = 1.e99"
+                               #     "define_y jet = 1.e99"
+                               #     "n_observed_min jet = 0"
+                               #     "n_observed_max jet = 99"
+                               #     AND:
+                               #     "jet_R_definition = 0"
+                               #  3: phi-star angle in Drell-Yan process (ONLY available for ppeex02)
+                               #  4: double-differential resummation of transverse-momentum of system & leading jet;
+                               #     computes transverse-momentum of system with a jet-veto cut
+			       #     (no N3LL supported!);
+                               #     the jet veto MUST be defined like this:
+                               #     "define_pT jet = value"
+                               #     "define_eta jet = 1.e99"
+                               #     "define_y jet = 1.e99"
+                               #     "n_observed_min jet = 0"
+                               #     "n_observed_max jet = 0"
+                               #     AND:
+                               #     "jet_R_definition = 0"
+                               #     "jet_R = 0.4" or "jet_R = 0.8"
+                               #  5: double-differential resummation of transverse-momentum of system & leading jet;
+                               #     computes transverse-momentum of leading jet with a veto cut on the system
+			       #     (no N3LL supported!);
+                               #     the veto cut MUST be defined by setting RadISH_pTsystem_veto and jets like this:
+                               #     "define_eta jet = 1.e99"
+                               #     "define_y jet = 1.e99"
+                               #     "n_observed_min jet = 0"
+                               #     "n_observed_max jet = 99"
+                               #     AND:
+                               #     "jet_R_definition = 0"
+                               #     "jet_R = 0.4" or "jet_R = 0.8"
+modlog_p = 4                   #  power modified logarithms (integer from 1 to 5; 4 for pT/phi-star, and 5 for pTjet)
+matching_scheme = 1            #  matching scheme used to combine the fixed order and resummation
+                               #  0: additive
+                               #  1: multiplicative (default)
+number_of_events = 4000        #  number of radish events used for each Born phase space point
+min_born_events_radish = 4000  #  minimal number of Born events used in each parallel run
+RadISH_pTsystem_veto = 1.e99   #  veto on transverse momentum of system (used only for RadISH_observable = 5)
+
+
+#----------------------------\
+# Settings for fiducial cuts |
+#----------------------------/
+user_switch M_leplep = 1       #  switch to turn on (1) and off (0) cuts on lepton-lepton invariant mass
+user_cut min_M_leplep = 10.    #  requirement on lepton-lepton invariant mass (lower cut)
+
+# Jet algorithm
+jet_algorithm = 3              #  (1) Cambridge-Aachen (2) kT (3) anti-kT
+jet_R_definition = 0           #  (0) pseudo-rapidity (1) rapidity
+jet_R = 0.4                    #  DeltaR
+
+# Jet cuts
+define_pT jet = 30.            #  requirement on jet transverse momentum (lower cut)
+define_eta jet = 4.7           #  requirement on jet pseudo-rapidity (upper cut)
+define_y jet = 1.e99           #  requirement on jet rapidity (upper cut)
+n_observed_min jet = 0         #  minimal number of observed jets (with cuts above)
+n_observed_max jet = 99        #  maximal number of observed jets (with cuts above)
+
+# Lepton cuts
+define_pT lep = 0.            #  requirement on lepton transverse momentum (lower cut)
+define_eta lep = 1e99          #  requirement on lepton pseudo-rapidity (upper cut)
+define_y lep = 1.e99           #  requirement on lepton rapidity (upper cut)
+n_observed_min lep = 1         #  minimal number of observed leptons (with cuts above)
+n_observed_max lep = 99        #  maximal number of observed leptons (with cuts above)
+
+# Neutrino cuts
+define_pT missing = 0.        #  requirement on transverse momentum of sum of all neutrinos (lower cut)
+
+####################
+# User-defined cuts
+# (only used if defined in 'MATRIX/prc/$process/user/specify.cuts.cxx')
+#
+# no user-defined cuts implemented at the moment for this process
+
+#-----------------\
+# MATRIX behavior |
+#-----------------/
+max_time_per_job = 48         #  very rough time(hours) one main run job shall take (default: 24h)
+                               #  unreliable when < 1h, use as tuning parameter for degree of parallelization
+                               #  note: becomes ineffective when job number > max_nr_parallel_jobs
+                               #        which is set in MATRIX_configuration file
+switch_distribution = 1        #  switch to turn on (1) and off (0) distributions
+save_previous_result = 1       #  switch to save previous result of this run (in result/"run"/saved_result_$i)
+save_previous_log = 0          #  switch to save previous log of this run (in log/"run"/saved_result_$i)
+#include_pre_in_results = 0     #  switch to (0) only include main run in results; (1) also all extrapolation (pre) runs;
+                               #  crucial to set to 0 if re-running main with different inputs (apart from precision)
+                               #  note: if missing (default) pre runs used if important for precision
+                               #  (separately for each contribution)
+reduce_workload = 2            #  switch to keep full job output (0), reduce (1) or minimize (2) workload on slow clusters
+random_seed = 0                #  specify integer value (grid-/pre-run reproducible)
